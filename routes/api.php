@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\TechFileController;
+use App\Http\Controllers\TechnicalController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,6 +25,12 @@ Route::post('sendotp', 'App\Http\Controllers\AuthenticateController@fn_sendotp')
 Route::post('verifyotp', 'App\Http\Controllers\AuthenticateController@fn_verifyotp');
 Route::post('forgetpwd', 'App\Http\Controllers\AuthenticateController@fn_forgetpwd');
 
+
+
+//Route::post('upload',[TechFileController::class,'upload']);
+//Route::post('technical/add',[TechnicalController::class,'store']);
+
+
 Route::group([
 
     'middleware' => 'api',
@@ -38,7 +45,8 @@ Route::group([
     Route::get('profile','AuthController@profile');
     Route::post('refresh', 'AuthController@refresh');
     
-    //Route::post('me', 'AuthController@me');
+    Route::post('personal_details', 'UsersDetailsController@fn_personal_details');
+    Route::post('technical/add', 'TechnicalController@store');
     //Route::post('sendPasswordResetLink', 'PasswordResetRequestController@sendEmail');
     //Route::post('resetPassword', 'ChangePasswordController@passwordResetProcess');
 

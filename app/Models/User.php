@@ -62,5 +62,11 @@ class User extends Authenticatable implements JWTSubject
 
     }//end todos()
 
+    //Defined relation between user and technical
+    public function fn_user_technical_details()
+    {
+        return $this->hasOne(UserTechnicalDetails::class,'user_id','id');
+
+    }
 
 }//end class

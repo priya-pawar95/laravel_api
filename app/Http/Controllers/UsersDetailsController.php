@@ -2,58 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\personal_details;
+
 use Illuminate\Http\Request;
+use App\Models\Personal_details;
+use App\Models\tech_details;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class AuthController extends Controller
+class UsersDetailsController extends Controller
 {
-
-
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login', 'register','sendOtp','personal_details']]);
 
     }//end __construct()
 
-
-    public function login(Request $request)
+    public function fn_personal_details(Request $request)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
-                'email'    => 'required|email',
-                'password' => 'required|string|min:6',
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-
-        $token_validity = (24 * 60);
-
-        $this->guard()->factory()->setTTL($token_validity);
-
-        if (!$token = $this->guard()->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $this->respondWithToken($token);
-
-    }//end login()
-
-
-    public function register(Request $request)
-    {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'name'     => 'required|string|between:2,100',
-                'email'    => 'required|email|unique:users',
-                'password' => 'required|confirmed|min:6',
+                'address'     => 'required|string|between:2,100',
+                'district'    => 'required|string|between:2,50',
+                'pin_code'    => 'required|integer|min:6',
+                'place'       => 'required|string|between:2,50',
+                'state'       => 'required|string|between:2,50',
             ]
         );
 
@@ -64,17 +38,22 @@ class AuthController extends Controller
             );
         }
 
-        $user = User::create(
+        $personal_details = Personal_details::create(
             array_merge(
                 $validator->validated(),
-                ['password' => bcrypt($request->password)]
+                
             )
         );
 
-        return response()->json(['message' => 'User created successfully', 'user' => $user]);
+    } 
 
-    }//end register()
+    catch(Exception $exception)
+        {
+        return response()->json(['message' => 'Add Personal Details successfully', 'personal_details' => $personal_details]);
+        }
+    }//end personal_details()
 
+    
 
     public function logout()
     {
@@ -121,4 +100,5 @@ class AuthController extends Controller
     }//end guard()
 
 
-}//end class
+
+}
